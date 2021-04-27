@@ -10,7 +10,7 @@ import java.util.Scanner;
 import javax.naming.AuthenticationException;
 
 public class Main {
-
+//Checking git
 	private static int choiceBusiness = 0;
 	private static int choiceMain=0;
 	private static int mainMenuUpperBound=3;
@@ -174,7 +174,7 @@ public class Main {
 				directoryPath=new File(".").getCanonicalPath();
 				System.out.println("Current directory is " +directoryPath);
 			}catch (NullPointerException e) {
-				// TODO: handle exception
+				// TODO: handle exceptions
 				System.out.println("The path you entered is invalid. Please check");
 				System.exit(0);
 			} catch (Exception e) {
@@ -218,9 +218,21 @@ public class Main {
 		File[] filesInDirectory = directory.listFiles();
 		
 		String allFiles=null;
-	
+		String allTypes=null;
+		
+		
+		
+		System.out.println("\n\n************************************************************************");
+		System.out.println("Sno.\tFile name\t\tFile Tyepe \t\tFile Size");
+		System.out.println("************************************************************************");
+
+		int count=0;
 		for (File f : filesInDirectory) {
-			System.out.println(f.getName());
+			
+			double fileSize=0.0;
+			int mb=0,kb=0,gb=0;
+			
+			System.out.println(++count+"\t"+ f.getName()+ "\t\t\t\ttype"+"\t\t"+f.length()+" Kb");
 			allFiles=f.getName();
 		}
 	
