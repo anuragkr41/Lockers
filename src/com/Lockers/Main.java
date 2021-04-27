@@ -1,6 +1,4 @@
 package com.Lockers;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -44,14 +42,11 @@ public class Main {
 					continue;
 				}
 
-
 			}
 			finally {
 				//				choiceScanner.close();
 			}
-
-
-
+			
 			switch (choiceMain) { //switch main
 			case 1 : 
 				sortFiles();
@@ -84,9 +79,8 @@ public class Main {
 					finally {
 						//						scanner.close();
 					}
-
-
-
+					
+					
 					switch (choiceBusiness) { //switch statement for the business operation menu
 
 
@@ -115,14 +109,12 @@ public class Main {
 						break;
 					}
 
-
 				}while(choiceBusiness !=0); //Business Menu Loop Close
 
 				if (redirect) {
 					continue;
 				}
-
-
+		
 			case 3:
 				System.out.println("Aborting program");
 				System.exit(0);
@@ -131,13 +123,7 @@ public class Main {
 			}//switch main close
 		}while (choiceMain !=3); //Main Menu loop close
 
-
-
-
-
 	}//main method close
-
-
 
 	static void showMainMenu() {
 		System.out.println("\n\t\t\tMAIN MENU");
@@ -157,8 +143,6 @@ public class Main {
 		System.out.println("3. Search for a specific file");
 		System.out.println("4. Return to the main menu");
 	}
-
-	
 	
 	static void displayFiles()  {
 		System.out.println("Files in current directoru will show just in a minute");
@@ -181,10 +165,6 @@ public class Main {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
-			
-		
 		
 		File directory = null;
 		
@@ -220,20 +200,41 @@ public class Main {
 		String allFiles=null;
 		String allTypes=null;
 		
-		
-		
-		System.out.println("\n\n************************************************************************");
-		System.out.println("Sno.\tFile name\t\tFile Tyepe \t\tFile Size");
-		System.out.println("************************************************************************");
+		System.out.println("\n\n**********************************************************************************************************************************");
+		System.out.printf("%-4s %-70s %-40s %-50s","Sno.", "File name", "File Tyepe", "File Size");
+		System.out.println("\n\n**********************************************************************************************************************************");
 
+		
+		double size=0;
 		int count=0;
+		String unit="bytes";
+		
 		for (File f : filesInDirectory) {
+			size=(double)f.length();
 			
-			double fileSize=0.0;
-			int mb=0,kb=0,gb=0;
 			
-			System.out.println(++count+"\t"+ f.getName()+ "\t\t\t\ttype"+"\t\t"+f.length()+" Kb");
-			allFiles=f.getName();
+			if (size>1024 && size<1024*1024) {
+				unit="KB";
+				size=size/1024;
+				size = Math.round(size*10.0)/10.0;	
+			
+			}
+			
+			if (size>1024*1024 && size<1024*1024*1024) {
+				unit="MB";
+				size=size/1024/1024;
+				size = Math.round(size*100.0)/100.0;
+			}
+			
+			if (size>1024*1024*1024) {
+				unit="GB";
+				size=size/1024/1024/1024;
+				size = Math.round(size*100.0)/100.0;
+
+			}
+			
+			System.out.printf("%-4s %-70s %-40s %-50s\n",++count, " "+f.getName(),"type",size+" "+unit );
+
 		}
 	
 	}
