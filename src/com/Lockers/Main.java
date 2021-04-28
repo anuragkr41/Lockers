@@ -7,8 +7,22 @@ import java.util.Scanner;
 
 import javax.naming.AuthenticationException;
 
+import java.io.File;
+
+
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+
+import javax.naming.AuthenticationException;
+
+
 public class Main {
-//Checking git
+	//Checking git
 	//connecting git
 	private static int choiceBusiness = 0;
 	private static int choiceMain=0;
@@ -28,7 +42,7 @@ public class Main {
 			System.out.println("\nWhats your choice?");
 
 			try {
-				
+
 				choiceMain= Integer.parseInt(choiceScanner.nextLine());
 				boolean repeatMenu= menuChoiceValidation(mainMenuUpperBound,choiceMain);
 				if (repeatMenu) {
@@ -36,8 +50,8 @@ public class Main {
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
-				
-				choiceMain=4;
+
+				choiceMain=5;
 				boolean repeatMenu= menuChoiceValidation(mainMenuUpperBound,choiceMain);
 				if (repeatMenu) {		
 					continue;
@@ -47,14 +61,17 @@ public class Main {
 			finally {
 				//				choiceScanner.close();
 			}
-			
+
 			switch (choiceMain) { //switch main
 			case 1 : 
-				sortFiles();
+				
 				displayFiles();
 				break;
+				
+			case 2:
+				sortFiles();
 
-			case 2 :
+			case 3 :
 				boolean breaking=false;
 				boolean redirect=false;
 
@@ -80,8 +97,8 @@ public class Main {
 					finally {
 						//						scanner.close();
 					}
-					
-					
+
+
 					switch (choiceBusiness) { //switch statement for the business operation menu
 
 
@@ -115,14 +132,14 @@ public class Main {
 				if (redirect) {
 					continue;
 				}
-		
-			case 3:
+
+			case 4:
 				System.out.println("Aborting program");
 				System.exit(0);
 			default :
 				System.out.println("Not a valid choice");
 			}//switch main close
-		}while (choiceMain !=3); //Main Menu loop close
+		}while (choiceMain !=4); //Main Menu loop close
 
 	}//main method close
 
@@ -130,8 +147,9 @@ public class Main {
 		System.out.println("\n\t\t\tMAIN MENU");
 		System.out.println("Please select the following options and press enter key for your choice");
 		System.out.println("1. Display the files present in the directory");
-		System.out.println("2. More options");
-		System.out.println("3. Exit the program");
+		System.out.println("2. Sort the files and display");
+		System.out.println("3. More options");
+		System.out.println("4. Exit the program");
 
 	}
 
@@ -144,38 +162,38 @@ public class Main {
 		System.out.println("3. Search for a specific file");
 		System.out.println("4. Return to the main menu");
 	}
-	
+
 	static void displayFiles()  {
 		System.out.println("Files in current directoru will show just in a minute");
 		System.out.println("Press 1 if want to view the files in current directory");
 		System.out.println("Press 2 if you want to view files in custom directory");
 		Scanner scanner=new Scanner(System.in);
 		String directoryPath = null;
-		
+
 		int choice = Integer.parseInt(scanner.nextLine());
-		
-		
-			try {
-				directoryPath=new File(".").getCanonicalPath();
-				System.out.println("Current directory is " +directoryPath);
-			}catch (NullPointerException e) {
-				// TODO: handle exceptions
-				System.out.println("The path you entered is invalid. Please check");
-				System.exit(0);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		File directory = null;
-		
-		if (choice==1) {
-			 directory = new File(directoryPath);
+
+
+		try {
+			directoryPath=new File(".").getCanonicalPath();
+			System.out.println("Current directory is " +directoryPath);
+		}catch (NullPointerException e) {
+			// TODO: handle exceptions
+			System.out.println("The path you entered is invalid. Please check");
+			System.exit(0);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+
+		File directory = null;
+
+		if (choice==1) {
+			directory = new File(directoryPath);
+		}
+
 		else if (choice==2) {
 			try {
-				 directory = new File(scanner.nextLine());
+				directory = new File(scanner.nextLine());
 				System.out.println("The directory you entered is "+directory);
 			} 
 			catch (NullPointerException e) {
@@ -187,84 +205,111 @@ public class Main {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-			
-			
+
+
 		}
-		
+
 		else {
 			System.out.println("Wrong choice. Please try again");
 		}
-		
+
 		System.out.println("Absolute path is " +directory.getAbsolutePath());
+		
+//		HashMap<String, Double> fileDetails = new HashMap<String, Double>();
+		
 		File[] filesInDirectory = directory.listFiles();
-		
-		String allFiles=null;
-		String allTypes=null;
-		
+
+//		String allFiles=null;
+//		String allTypes=null;
+
 		System.out.println("\n\n**********************************************************************************************************************************");
-		System.out.printf("%-4s %-70s %-40s %-50s","Sno.", "File name", "File Tyepe", "File Size");
+		System.out.printf("%-4s %-70s %-40s %-50s","Sno.", "File name", "File Type", "File Size");
 		System.out.println("\n\n**********************************************************************************************************************************");
 
-		
+
 		double size=0;
 		int count=0;
 		String unit="bytes";
-		
+		String fileType="file";
 		for (File f : filesInDirectory) {
-			size=(double)f.length();
+			
+//			
+						
+			if (f.isDirectory()) { //if else block for fetching directory size
+			   size=getDirectorySize(f);
+			   fileType="Directory";
+			   
+			}
+			
+			else {
+				size=(double)f.length();
+				String type = f.getName();
+				String[] filesType=type.split("[.]");
+				fileType= "."+filesType[filesType.length-1];
+							
+			}		//if else block for fetching directory size
 			
 			
+			if (size<1024) {
+				size = (int) size/1;	
+				unit="bytes";
+			}
+
+
 			if (size>1024 && size<1024*1024) {
 				unit="KB";
 				size=size/1024;
 				size = Math.round(size*10.0)/10.0;	
-			
+
 			}
-			
+
 			if (size>1024*1024 && size<1024*1024*1024) {
 				unit="MB";
 				size=size/1024/1024;
 				size = Math.round(size*100.0)/100.0;
 			}
-			
+
 			if (size>1024*1024*1024) {
 				unit="GB";
 				size=size/1024/1024/1024;
 				size = Math.round(size*100.0)/100.0;
 
 			}
-			
-			System.out.printf("%-4s %-70s %-40s %-50s\n",++count, " "+f.getName(),"type",size+" "+unit );
+
+			System.out.printf("%-4s %-70s %-40s %-50s\n",++count, " "+f.getName(),fileType,size+" "+unit );
 
 		}
-	
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+	public static double getDirectorySize(File dir) { // recursive function to get the size of directory
+
+	      double sz = 0;
+	      File[] files = dir.listFiles();
+	      if (files != null) {
+	          for (File file : files) {
+	              if (file.isFile())
+	                  sz += file.length();
+	              else
+	                  sz += getDirectorySize(file);
+	          }
+	      }
+	      return sz;
+
+	  }
+
+
+
+
+
+
+
+
+
+
 
 	static void sortFiles() {
 		System.out.println("Files are being sorted");
@@ -308,7 +353,6 @@ public class Main {
 				// TODO: handle exception
 				System.out.println("Showing the menu");
 				System.exit(ch);
-
 			}
 		}
 		return false;
