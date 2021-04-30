@@ -19,6 +19,8 @@ public class Main {
 		// TODO Auto-generated method stub
 
 		showWelcomeMessage();
+		
+		
 		do {
 			System.out.println("You are currently in the following directory");
 			System.out.println(currentDirectoryPath);
@@ -104,19 +106,10 @@ public class Main {
 
 	private static void showWelcomeMessage() {
 		// TODO Auto-generated method stub
-		
-		
-		
-		
-
 		System.out.println("\n\n");
 		System.out.println("\t\t\t█░░ █▀█ █▀▀ █▄▀ █▀▀ █▀█ █▀   █▀█ █░█ ▀█▀   █░░ ▀█▀ █▀▄");
 		System.out.println("\t\t\t█▄▄ █▄█ █▄▄ █░█ ██▄ █▀▄ ▄█   █▀▀ ▀▄▀ ░█░   █▄▄ ░█░ █▄▀");
-		
-		
-		
-		
-		
+
 		System.out.println("\n\n\t\t\t\t\t***Welcome to Lockers Pvt Ltd***");
 		System.out.println("\t\t\t\t\t\t[By Anurag Kumar]\n\n");
 
@@ -126,13 +119,11 @@ public class Main {
 		System.out.println("File is being added, just a minute");
 		System.out.println("Enter the file name that you want to create");
 		String fileName=inputFile();
-		
-		
+
 		File file = new File(currentDirectoryPath+"\\"+fileName);
-		
+
 		System.out.println("Your current directory at (addfile) is "+currentDirectoryPath);
-//		System.out.println( file.getName()); //testing purpose
-		
+		//		System.out.println( file.getName()); //testing purpose
 		boolean isFileExist;
 		try {
 			isFileExist=file.createNewFile();
@@ -142,17 +133,13 @@ public class Main {
 			else {
 				System.out.println("Sorry, file already exist with the same name.");
 			}
-			
+
 		} catch (IOException e) {
 			// TODO: handle exception
-			
-			e.printStackTrace();
-			
-		}
-		
-		
-		
 
+			e.printStackTrace();
+
+		}
 	}
 
 	static void deleteFile() {
@@ -160,7 +147,7 @@ public class Main {
 		System.out.println("Enter the file name that you want to delete");
 		String fileName=inputFile();
 		File file = new File(currentDirectoryPath+"\\"+fileName);
-		
+
 		try {
 			if (file.delete()) {
 				System.out.println("File"+file.getName()+ "deleted SuccessFully");
@@ -168,15 +155,12 @@ public class Main {
 			else {
 				System.out.println("File not ");
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		
 	}
-
-
 
 	public static int directoryChoice(String word) {
 		System.out.println("Press 1 if want to "+word+" the files in current directory");
@@ -199,12 +183,9 @@ public class Main {
 		String fileType="file";
 		for (File f : filesInDirectory) {
 
-			//			
-
 			if (f.isDirectory()) { //if else block for fetching directory size
 				size=getDirectorySize(f);
 				fileType="Directory";
-
 			}
 
 			else {
@@ -215,12 +196,10 @@ public class Main {
 
 			}		//if else block for fetching directory size
 
-
 			if (size<1024) {
 				size = (int) size/1;	
 				unit="bytes";
 			}
-
 
 			else if (size>1024 && size<1024*1024) {
 				unit="KB";
@@ -259,12 +238,9 @@ public class Main {
 		String fileType="file";
 		for (File f : dir) {
 
-			//			
-
 			if (f.isDirectory()) { //if else block for fetching directory size
 				size=getDirectorySize(f);
 				fileType="Directory";
-
 			}
 
 			else {
@@ -272,21 +248,17 @@ public class Main {
 				String type = f.getName();
 				String[] filesType=type.split("[.]");
 				fileType= "."+filesType[filesType.length-1];
-
 			}		//if else block for fetching directory size
-
 
 			if (size<1024) {
 				size = (int) size/1;	
 				unit="bytes";
 			}
 
-
 			else if (size>1024 && size<1024*1024) {
 				unit="KB";
 				size=size/1024;
 				size = Math.round(size*10.0)/10.0;	
-
 			}
 
 			else if (size>1024*1024 && size<1024*1024*1024) {
@@ -299,13 +271,10 @@ public class Main {
 				unit="GB";
 				size=size/1024/1024/1024;
 				size = Math.round(size*100.0)/100.0;
-
 			}
 			System.out.printf("%-4s %-70s %-40s %-50s\n",++count, " "+f.getName(),fileType,size+" "+unit );
 		}//end of for each loop
 	} //End of display files method
-
-
 
 	static void displayFiles()  {
 
@@ -328,12 +297,9 @@ public class Main {
 		String fileType="file";
 		for (File f : filesInDirectory) {
 
-			//			
-
 			if (f.isDirectory()) { //if else block for fetching directory size
 				size=getDirectorySize(f);
 				fileType="Directory";
-
 			}
 
 			else {
@@ -344,18 +310,15 @@ public class Main {
 
 			}		//if else block for fetching directory size
 
-
 			if (size<1024) {
 				size = (int) size/1;	
 				unit="bytes";
 			}
 
-
 			else if (size>1024 && size<1024*1024) {
 				unit="KB";
 				size=size/1024;
 				size = Math.round(size*10.0)/10.0;	
-
 			}
 
 			else if (size>1024*1024 && size<1024*1024*1024) {
@@ -368,7 +331,6 @@ public class Main {
 				unit="GB";
 				size=size/1024/1024/1024;
 				size = Math.round(size*100.0)/100.0;
-
 			}
 			System.out.printf("%-4s %-70s %-40s %-50s\n",++count, " "+f.getName(),fileType,size+" "+unit );
 		}//end of for each loop
@@ -387,7 +349,19 @@ public class Main {
 			}
 		}
 		return sz;
+	}
 
+	public static String inputFile() {
+		Scanner scanner = new Scanner(System.in);
+		String name=null; 
+	
+		try {
+			name = scanner.nextLine();
+		} catch (Exception e) {
+			// TODO: handle exception
+			name = "NoName";
+		}
+		return name;
 	}
 
 	public static int inputNumber(int upperBound) { // input number method ok!!
@@ -418,7 +392,6 @@ public class Main {
 
 			}	
 		}
-
 		return choice;
 	} // input number close
 
@@ -458,7 +431,6 @@ public class Main {
 
 	static void showBusinessMenu() {
 		System.out.println("\n\t\t\t BUSINESS OPERATIONS MENU");
-
 		System.out.println("Please select the following options and press enter key for your choice");
 		System.out.println("1. Add a file in the current directory ");
 		System.out.println("2. Delete a file from the current directory");
@@ -488,11 +460,11 @@ public class Main {
 	public static File WorkingDirectory(int choice) {
 
 		Scanner scanner=new Scanner(System.in);
-		String directoryPath = currentDirectoryPath;
+		
 		File directory = null;
 
 		if (choice==1) {
-			directory = new File(directoryPath);
+			directory = new File(currentDirectoryPath);
 		}
 
 		else if (choice==2) {			
@@ -504,6 +476,7 @@ public class Main {
 			} 
 			catch (NullPointerException e) {
 				// TODO: handle exception
+				
 
 				return currentDirectory;
 				//				System.out.println("The path you entered is invalid. Please check");
@@ -524,19 +497,6 @@ public class Main {
 		return directory;
 
 
-	}
-
-	public static String inputFile() {
-		Scanner scanner = new Scanner(System.in);
-		String name=null; 
-
-		try {
-			name = scanner.nextLine();
-		} catch (Exception e) {
-			// TODO: handle exception
-			name = "NoName";
-		}
-		return name;
 	}
 
 }//Class Main closed
