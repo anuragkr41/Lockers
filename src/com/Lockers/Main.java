@@ -1,6 +1,6 @@
 package com.Lockers;
 import java.io.File;
-
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.InputMismatchException;
@@ -124,11 +124,56 @@ public class Main {
 
 	static void addFile() {
 		System.out.println("File is being added, just a minute");
+		System.out.println("Enter the file name that you want to create");
+		String fileName=inputFile();
+		
+		
+		File file = new File(currentDirectoryPath+"\\"+fileName);
+		
+		System.out.println("Your current directory at (addfile) is "+currentDirectoryPath);
+//		System.out.println( file.getName()); //testing purpose
+		
+		boolean isFileExist;
+		try {
+			isFileExist=file.createNewFile();
+			if (isFileExist) {
+				System.out.println("File created at location "+file.getParent());
+			}
+			else {
+				System.out.println("Sorry, file already exist with the same name.");
+			}
+			
+		} catch (IOException e) {
+			// TODO: handle exception
+			
+			e.printStackTrace();
+			
+		}
+		
+		
+		
 
 	}
 
 	static void deleteFile() {
 		System.out.println("File is being deleted");
+		System.out.println("Enter the file name that you want to delete");
+		String fileName=inputFile();
+		File file = new File(currentDirectoryPath+"\\"+fileName);
+		
+		try {
+			if (file.delete()) {
+				System.out.println("File"+file.getName()+ "deleted SuccessFully");
+			}
+			else {
+				System.out.println("File not ");
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 
 
