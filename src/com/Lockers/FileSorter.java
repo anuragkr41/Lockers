@@ -66,7 +66,7 @@ public class FileSorter implements Comparator
 			String thatChunk = getChunk(s2, s2Length, thatMarker);
 			thatMarker += thatChunk.length();
 
-			/** If both chunks contain numeric characters, sort them numerically **/
+			// If both chunks contain numeric characters, sort them numerically 
 
 			int result = 0;
 			if (isDigit(thisChunk.charAt(0)) && isDigit(thatChunk.charAt(0)))

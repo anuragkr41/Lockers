@@ -17,26 +17,31 @@ public class Main {
 
 	public static void main (String[] args) throws Exception{
 		// TODO Auto-generated method stub
-		System.out.println("You are currently in the following directory");
-		System.out.println(currentDirectoryPath);
-		do {
 
+		showWelcomeMessage();
+		do {
+			System.out.println("You are currently in the following directory");
+			System.out.println(currentDirectoryPath);
 			showMainMenu();
 			menuType=1;
 			System.out.println("\nWhats your choice?");
+			System.out.println(currentDirectoryPath);
 			choiceMain=inputNumber(mainMenuUpperBound);
 
 			switch (choiceMain) { //switch main
 			case 1 : 
 				displayFiles();
+				currentDirectoryPath=currentDirectory.getAbsolutePath();
+				//				System.out.println("Current Directory is now set to "+ currentDirectory.getAbsolutePath());
 				break;
 
 			case 2:
-				
-				
+
+
 				int sortCh=directoryChoice("sort");
-//				WorkingDirectory(sortCh);
+				//				WorkingDirectory(sortCh);
 				currentDirectory=WorkingDirectory(sortCh);
+				currentDirectoryPath=currentDirectory.getAbsolutePath();
 
 				File[] sortedDirecotry=	sortFiles(currentDirectory);
 				displayFiles(sortedDirecotry);
@@ -60,12 +65,12 @@ public class Main {
 						deleteFile();
 						break;
 					case 3:
-						
-							System.out.println("\nEnter the name of the file that you want to search");
+
+						System.out.println("\nEnter the name of the file that you want to search");
 						File fs=searchFile(currentDirectory, inputFile());
 
 						displayFiles(fs);
-//						System.out.println("File is found in "+fs.getPath());
+						//						System.out.println("File is found in "+fs.getPath());
 						break;
 					case 4:
 						System.out.println("Going back to the Main Menu");
@@ -97,6 +102,13 @@ public class Main {
 
 	}//main method close
 
+	private static void showWelcomeMessage() {
+		// TODO Auto-generated method stub
+		System.out.println("\n\n\t\t***Welcome to Lockers Pvt Ltd***");
+		System.out.println("\t\t\t[By Anurag Kumar]\n\n");
+
+	}
+
 	static void addFile() {
 		System.out.println("File is being added, just a minute");
 
@@ -106,14 +118,14 @@ public class Main {
 		System.out.println("File is being deleted");
 	}
 
-	
-	
+
+
 	public static int directoryChoice(String word) {
-		System.out.println("Press 1 if want to"+word+"the files in current directory");
-		System.out.println("Press 2 if you want to"+word+" view files in custom directory");
-	
+		System.out.println("Press 1 if want to "+word+" the files in current directory");
+		System.out.println("Press 2 if you want to "+word+" view files in custom directory");
+
 		return inputNumber(2);
-	
+
 	}
 
 	static void displayFiles(File dir) {
@@ -175,9 +187,9 @@ public class Main {
 		}//end of for each loop
 	} //End of display files method
 
-		
+
 	static void displayFiles(File[] dir) {
-//		File[] filesInDirectory = dir.listFiles();
+		//		File[] filesInDirectory = dir.listFiles();
 		System.out.println("\n\n**********************************************************************************************************************************");
 		System.out.printf("%-4s %-70s %-40s %-50s","Sno.", "File name", "File Type", "File Size");
 		System.out.println("\n\n**********************************************************************************************************************************");
@@ -235,15 +247,16 @@ public class Main {
 		}//end of for each loop
 	} //End of display files method
 
-	
-	
+
+
 	static void displayFiles()  {
-		
+
 		int ch=directoryChoice("view");
 
 		currentDirectory= WorkingDirectory(ch);
+		currentDirectoryPath=currentDirectory.getAbsolutePath();
 
-//		System.out.println("Absolute path is " +wd.getAbsolutePath());
+		//		System.out.println("Absolute path is " +wd.getAbsolutePath());
 		File[] filesInDirectory = currentDirectory.listFiles();
 
 		System.out.println("\n\n**********************************************************************************************************************************");
@@ -324,7 +337,7 @@ public class Main {
 		int choice=0;
 		while (choice<=0||choice>upperBound) {
 			try {
-				System.out.println("Please enter a number between 1 and "+upperBound+" or press 9 to quit");
+				System.out.println(" ** NOTE**- Please enter a number between 1 and "+upperBound+" or press 9 to quit");
 				choice=sc.nextInt();
 				if (choice==9) {
 					System.out.println("Shutting down application");
@@ -410,30 +423,14 @@ public class Main {
 		System.out.println("File are being sorted");
 
 		Arrays.sort(filesInDirectory, new FileSorter());
-		
+
 		return filesInDirectory;
 	}
-		
-
 
 	public static File WorkingDirectory(int choice) {
 
 		Scanner scanner=new Scanner(System.in);
-		String directoryPath = null;
-
-
-		try {
-			directoryPath=new File(".").getCanonicalPath();
-			System.out.println("Current directory is " +directoryPath);
-		}catch (NullPointerException e) {
-			// TODO: handle exceptions
-			System.out.println("The path you entered is invalid. Please check");
-			System.exit(0);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		String directoryPath = currentDirectoryPath;
 		File directory = null;
 
 		if (choice==1) {
@@ -441,19 +438,24 @@ public class Main {
 		}
 
 		else if (choice==2) {			
-			
+
 			try {
+				System.out.println("Please enter an existing directory path");
 				directory = new File(scanner.nextLine());
 				System.out.println("The directory you entered is "+directory);
 			} 
 			catch (NullPointerException e) {
 				// TODO: handle exception
-				System.out.println("The path you entered is invalid. Please check");
-				System.exit(0);
+
+				return currentDirectory;
+				//				System.out.println("The path you entered is invalid. Please check");
 			}
 			catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
+				return currentDirectory;
+				//				directory=currentDirectory;
+
+				//				e.printStackTrace();
 			}
 		}
 
@@ -465,11 +467,11 @@ public class Main {
 
 
 	}
-	
+
 	public static String inputFile() {
 		Scanner scanner = new Scanner(System.in);
 		String name=null; 
-		
+
 		try {
 			name = scanner.nextLine();
 		} catch (Exception e) {
