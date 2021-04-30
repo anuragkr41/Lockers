@@ -104,8 +104,21 @@ public class Main {
 
 	private static void showWelcomeMessage() {
 		// TODO Auto-generated method stub
-		System.out.println("\n\n\t\t***Welcome to Lockers Pvt Ltd***");
-		System.out.println("\t\t\t[By Anurag Kumar]\n\n");
+		
+		
+		
+		
+
+		System.out.println("\n\n");
+		System.out.println("\t\t\t█░░ █▀█ █▀▀ █▄▀ █▀▀ █▀█ █▀   █▀█ █░█ ▀█▀   █░░ ▀█▀ █▀▄");
+		System.out.println("\t\t\t█▄▄ █▄█ █▄▄ █░█ ██▄ █▀▄ ▄█   █▀▀ ▀▄▀ ░█░   █▄▄ ░█░ █▄▀");
+		
+		
+		
+		
+		
+		System.out.println("\n\n\t\t\t\t\t***Welcome to Lockers Pvt Ltd***");
+		System.out.println("\t\t\t\t\t\t[By Anurag Kumar]\n\n");
 
 	}
 
