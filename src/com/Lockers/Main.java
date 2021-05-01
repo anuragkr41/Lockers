@@ -5,22 +5,22 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
-import javax.naming.AuthenticationException;
+//import javax.naming.AuthenticationException;
 public class Main {
 	private static int choiceBusiness = 0;
 	private static int choiceMain=0;
 	private static int mainMenuUpperBound=4;
 	private static int businessMenuUpperBound=4;
 	private static int menuType;
-	private static File currentDirectory = new File("");
+	private static File currentDirectory = new File(".");
 	private static String currentDirectoryPath = currentDirectory.getAbsolutePath();
 
 	public static void main (String[] args) throws Exception{
 		// TODO Auto-generated method stub
 
 		showWelcomeMessage();
-		
-		
+
+
 		do {
 			System.out.println("You are currently in the following directory");
 			System.out.println(currentDirectoryPath);
@@ -354,7 +354,7 @@ public class Main {
 	public static String inputFile() {
 		Scanner scanner = new Scanner(System.in);
 		String name=null; 
-	
+
 		try {
 			name = scanner.nextLine();
 		} catch (Exception e) {
@@ -363,6 +363,23 @@ public class Main {
 		}
 		return name;
 	}
+
+
+	//	public static File inputDir() {
+	//		Scanner scanner = new Scanner(System.in);
+	//		
+	//
+	//		try {
+	//			File dir = dir(scanner.nextLine());
+	//		} catch (Exception e) {
+	//			// TODO: handle exception
+	//			name = "NoName";
+	//		}
+	//		return dir;
+	//		
+	//	}
+
+
 
 	public static int inputNumber(int upperBound) { // input number method ok!!
 		Scanner sc = new Scanner(System.in);
@@ -440,7 +457,7 @@ public class Main {
 
 	static void showMainMenu() {
 		System.out.println("\n\t\t\tMAIN MENU");
-		System.out.println("Please select the following options and press ente r key for your choice");
+		System.out.println("Please select the following options and press enter key for your choice");
 		System.out.println("1. Display the files present in a directory");
 		System.out.println("2. Sort files in curret directory");
 		System.out.println("3. More options");
@@ -448,6 +465,7 @@ public class Main {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	static File[] sortFiles(File dir) {
 		File[] filesInDirectory = dir.listFiles();
 		System.out.println("File are being sorted");
@@ -460,42 +478,34 @@ public class Main {
 	public static File WorkingDirectory(int choice) {
 
 		Scanner scanner=new Scanner(System.in);
-		
+
 		File directory = null;
 
 		if (choice==1) {
 			directory = new File(currentDirectoryPath);
 		}
+		else if (choice==2) {	
 
-		else if (choice==2) {			
-
-			try {
+			while (currentDirectory.canRead()) {
+//				System.out.println("CD is "+currentDirectoryPath);
 				System.out.println("Please enter an existing directory path");
+
 				directory = new File(scanner.nextLine());
-				System.out.println("The directory you entered is "+directory);
-			} 
-			catch (NullPointerException e) {
-				// TODO: handle exception
 				
 
-				return currentDirectory;
-				//				System.out.println("The path you entered is invalid. Please check");
+				if (!(directory.isDirectory())) {
+					System.out.println("INPUT ERROR. Try Again");
+					continue;
+				}
+
+				else if (directory.canExecute()){
+				break;
+				}
+
 			}
-			catch (Exception e) {
-				// TODO: handle exception
-				return currentDirectory;
-				//				directory=currentDirectory;
 
-				//				e.printStackTrace();
-			}
 		}
-
-		else {
-			System.out.println("Wrong choice. Please try again");
-		}
-
 		return directory;
-
 
 	}
 
