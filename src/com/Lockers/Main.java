@@ -1,9 +1,15 @@
 package com.Lockers;
+//import java.awt.List;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 import java.util.InputMismatchException;
+import java.util.Iterator;
+import java.util.List;
+
 
 //import javax.naming.AuthenticationException;
 public class Main {
@@ -12,8 +18,10 @@ public class Main {
 	private static int mainMenuUpperBound=4;
 	private static int businessMenuUpperBound=4;
 	private static int menuType;
+	private static boolean isFileFound=false;
 	private static File currentDirectory = new File(".");
 	private static String currentDirectoryPath = currentDirectory.getAbsolutePath();
+	private static boolean hasSearchedSubdir;
 
 	public static void main (String[] args) throws Exception{
 		// TODO Auto-generated method stub
@@ -23,7 +31,6 @@ public class Main {
 
 		do {
 			System.out.println("You are currently in the following directory");
-			System.out.println(currentDirectoryPath);
 			showMainMenu();
 			menuType=1;
 			System.out.println("\nWhats your choice?");
@@ -67,12 +74,19 @@ public class Main {
 						deleteFile();
 						break;
 					case 3:
-
-						System.out.println("\nEnter the name of the file that you want to search");
-						File fs=searchFile(currentDirectory, inputFile());
-
-						displayFiles(fs);
-						//						System.out.println("File is found in "+fs.getPath());
+						int searchCh=directoryChoice("SEARCH");
+						currentDirectory=WorkingDirectory(searchCh);
+						System.out.println("Enter the name of the file");
+						searchFile(currentDirectory, inputFile());
+						
+						if (!isFileFound) {
+							System.out.println("File not found");
+							
+						}
+						
+						else {
+							isFileFound=false;
+						}
 						break;
 					case 4:
 						System.out.println("Going back to the Main Menu");
@@ -164,11 +178,49 @@ public class Main {
 
 	public static int directoryChoice(String word) {
 		System.out.println("Press 1 if want to "+word+" the files in current directory");
-		System.out.println("Press 2 if you want to "+word+" view files in custom directory");
+		System.out.println("Press 2 if you want to "+word+" files in custom directory");
 
 		return inputNumber(2);
 
 	}
+
+	public static void searchFile(File dir ,String fileName) {
+		
+
+		
+		currentDirectoryPath=currentDirectory.getAbsolutePath();
+		
+		File[] files = dir.listFiles();
+		File updatedFolder=dir;
+		
+		if (files!=null) {
+			for (File file : files) {
+				if (file.isFile() && file.getName().equalsIgnoreCase(fileName)) {
+					
+					isFileFound=true;
+					if (hasSearchedSubdir) {
+						System.out.println("\nFile found sucessfully in one of the subsequent direcotories"
+								+ "\nThe file is located in <" + updatedFolder.getPath());
+					}
+					
+					else {
+						System.out.println("File found in the current directory");
+					}
+//						
+						
+						
+					}
+
+				else {
+					hasSearchedSubdir=true;
+					updatedFolder=file;
+					searchFile(updatedFolder, fileName);			
+				}			
+			}		
+		}
+		
+	}
+
 
 	static void displayFiles(File dir) {
 		File[] filesInDirectory = dir.listFiles();
@@ -412,39 +464,7 @@ public class Main {
 		return choice;
 	} // input number close
 
-	public static File searchFile(File dir ,String fileName) {
-		File[] files = dir.listFiles();
-		boolean isCheckingSubdirectories=false;
-		File updatedFolder=dir;
-		boolean found=false;
-		if (files!=null) {
-			for (File file : files) {
-				if (file.isFile()) {
-					if (file.getName().equals(fileName)) {
-						System.out.println("File found sucessfully");
-						found=true;	
-						System.out.println(file.getName());
-						return updatedFolder;
-					}
 
-					else {
-						isCheckingSubdirectories=true;
-						updatedFolder=file;
-						searchFile(file, fileName);		
-					}
-
-					if(found == false) {
-
-						System.out.println("\n Sorry!! File not found in the directory and other .");
-						return file;
-					}
-				}
-			}
-
-
-		}
-		return updatedFolder;
-	}
 
 	static void showBusinessMenu() {
 		System.out.println("\n\t\t\t BUSINESS OPERATIONS MENU");
@@ -464,6 +484,10 @@ public class Main {
 		System.out.println("4. Exit the program");
 
 	}
+
+
+
+
 
 	@SuppressWarnings("unchecked")
 	static File[] sortFiles(File dir) {
@@ -487,11 +511,10 @@ public class Main {
 		else if (choice==2) {	
 
 			while (currentDirectory.canRead()) {
-//				System.out.println("CD is "+currentDirectoryPath);
+				//				System.out.println("CD is "+currentDirectoryPath);
 				System.out.println("Please enter an existing directory path");
 
 				directory = new File(scanner.nextLine());
-				
 
 				if (!(directory.isDirectory())) {
 					System.out.println("INPUT ERROR. Try Again");
@@ -499,7 +522,7 @@ public class Main {
 				}
 
 				else if (directory.canExecute()){
-				break;
+					break;
 				}
 
 			}
