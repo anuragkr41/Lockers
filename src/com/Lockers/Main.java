@@ -204,12 +204,14 @@ public class Main {
 		
 		File[] files = dir.listFiles();
 		File updatedFolder=dir;
+		boolean isExactMatching=true;
+
 		
 		String passedFileNameString =fileName;
 		int passedFileNameDotIndex=passedFileNameString.lastIndexOf(".");
 		if (passedFileNameDotIndex>0) {
 			passedFileNameString=fileName.substring(0,passedFileNameDotIndex);
-//			System.out.println("Paased file name String is "+passedFileNameString);
+			
 		}
 		
 		
@@ -217,20 +219,20 @@ public class Main {
 			for (File file : files) {
 				String filenameString=file.getName();
 				
-//				System.out.println("Filename String is "+filenameString);
 				int lastIndexOFDot=filenameString.lastIndexOf(".");
-//				System.out.println("LAst index is "+ lastIndexOFDot );
 				String rawFileName;
-//				System.out.println("Raw File name is "+rawFileName);
 				if (file.isFile()) {
 					
-					if (file.getName().equalsIgnoreCase(fileName)) {
+					if (file.getName().equalsIgnoreCase(fileName) && isExactMatching) {
 						isFileFound=true;
 						searchedFiles.add(file);
+						
+						
 					}
 					else if(lastIndexOFDot>0) {
+						isExactMatching=false;
 						rawFileName=filenameString.substring(0,file.getName().lastIndexOf('.'));
-						if ((fileName.equalsIgnoreCase(rawFileName)||passedFileNameString.equalsIgnoreCase(rawFileName))&&(!(file.getName().equalsIgnoreCase(fileName)))) {
+						if (fileName.equalsIgnoreCase(rawFileName)||(passedFileNameString.equalsIgnoreCase(rawFileName))&&isExactMatching) {
 					
 							isFileFound=true;
 							searchedFiles.add(file);
