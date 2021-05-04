@@ -22,6 +22,7 @@ public class Main {
 	private static File currentDirectory = new File(".");
 	private static String currentDirectoryPath = currentDirectory.getAbsolutePath();
 	private static boolean hasSearchedSubdir;
+	private static List<File>searchedFiles = new ArrayList<>();
 
 	public static void main (String[] args) throws Exception{
 		// TODO Auto-generated method stub
@@ -29,13 +30,15 @@ public class Main {
 		showWelcomeMessage();
 
 
+		
 		do {
 			System.out.println("You are currently in the following directory");
+			System.out.println(currentDirectory.getAbsolutePath());
 			showMainMenu();
 			menuType=1;
 			System.out.println("\nWhats your choice?");
-			System.out.println(currentDirectoryPath);
-			choiceMain=inputNumber(mainMenuUpperBound);
+//			System.out.println(currentDirectoryPath);
+			choiceMain=inputNumber(mainMenuUpperBound,true);
 
 			switch (choiceMain) { //switch main
 			case 1 : 
@@ -63,7 +66,8 @@ public class Main {
 				do{ //loop for business operation menu
 					showBusinessMenu();
 					menuType=2;
-					choiceBusiness=inputNumber(businessMenuUpperBound);
+					System.out.println("\nWhats your choice?");
+					choiceBusiness=inputNumber(businessMenuUpperBound, true);
 
 					switch (choiceBusiness) { //switch statement for the business operation menu
 					case 1:
@@ -82,11 +86,21 @@ public class Main {
 						if (!isFileFound) {
 							System.out.println("File not found");
 							
+							
 						}
 						
 						else {
 							isFileFound=false;
+							
 						}
+						if (searchedFiles.size()>0) {
+							displayFiles(searchedFiles);
+							searchedFiles.clear();
+						}
+						
+						
+						
+						
 						break;
 					case 4:
 						System.out.println("Going back to the Main Menu");
@@ -109,7 +123,7 @@ public class Main {
 				}
 
 			case 4:
-				System.out.println("Aborting program");
+				System.out.println("Thank you for using this application...\nAborting program");
 				System.exit(0);
 			default :
 				System.out.println("Not a valid choice");
@@ -130,14 +144,12 @@ public class Main {
 	}
 
 	static void addFile() {
-		System.out.println("File is being added, just a minute");
+		
 		System.out.println("Enter the file name that you want to create");
 		String fileName=inputFile();
 
 		File file = new File(currentDirectoryPath+"\\"+fileName);
 
-		System.out.println("Your current directory at (addfile) is "+currentDirectoryPath);
-		//		System.out.println( file.getName()); //testing purpose
 		boolean isFileExist;
 		try {
 			isFileExist=file.createNewFile();
@@ -157,17 +169,17 @@ public class Main {
 	}
 
 	static void deleteFile() {
-		System.out.println("File is being deleted");
+		
 		System.out.println("Enter the file name that you want to delete");
 		String fileName=inputFile();
 		File file = new File(currentDirectoryPath+"\\"+fileName);
 
 		try {
 			if (file.delete()) {
-				System.out.println("File"+file.getName()+ "deleted SuccessFully");
+				System.out.println("File "+file.getName()+ " deleted SuccessFully");
 			}
 			else {
-				System.out.println("File not ");
+				System.out.println("File not present in the directory");
 			}
 
 		} catch (Exception e) {
@@ -177,7 +189,7 @@ public class Main {
 	}
 
 	public static int directoryChoice(String word) {
-		System.out.println("Press 1 if want to "+word+" the files in current directory");
+		System.out.println("\nPress 1 if you want to "+word+" the files in current directory");
 		System.out.println("Press 2 if you want to "+word+" files in custom directory");
 
 		return inputNumber(2);
@@ -193,19 +205,48 @@ public class Main {
 		File[] files = dir.listFiles();
 		File updatedFolder=dir;
 		
+		String passedFileNameString =fileName;
+		int passedFileNameDotIndex=passedFileNameString.lastIndexOf(".");
+		if (passedFileNameDotIndex>0) {
+			passedFileNameString=fileName.substring(0,passedFileNameDotIndex);
+//			System.out.println("Paased file name String is "+passedFileNameString);
+		}
+		
+		
 		if (files!=null) {
 			for (File file : files) {
-				if (file.isFile() && file.getName().equalsIgnoreCase(fileName)) {
+				String filenameString=file.getName();
+				
+//				System.out.println("Filename String is "+filenameString);
+				int lastIndexOFDot=filenameString.lastIndexOf(".");
+//				System.out.println("LAst index is "+ lastIndexOFDot );
+				String rawFileName;
+//				System.out.println("Raw File name is "+rawFileName);
+				if (file.isFile()) {
 					
-					isFileFound=true;
-					if (hasSearchedSubdir) {
-						System.out.println("\nFile found sucessfully in one of the subsequent direcotories"
-								+ "\nThe file is located in <" + updatedFolder.getPath());
+					if (file.getName().equalsIgnoreCase(fileName)) {
+						isFileFound=true;
+						searchedFiles.add(file);
+					}
+					else if(lastIndexOFDot>0) {
+						rawFileName=filenameString.substring(0,file.getName().lastIndexOf('.'));
+						if ((fileName.equalsIgnoreCase(rawFileName)||passedFileNameString.equalsIgnoreCase(rawFileName))&&(!(file.getName().equalsIgnoreCase(fileName)))) {
+					
+							isFileFound=true;
+							searchedFiles.add(file);
+						}
+						
+//						System.out.println("Raw File name is "+rawFileName);
 					}
 					
-					else {
-						System.out.println("File found in the current directory");
-					}
+//					if (hasSearchedSubdir) {
+//						System.out.println("\nFile found sucessfully in one of the subsequent direcotories"
+//								+ "\nThe file is located in <" + updatedFolder.getPath());
+//					}
+//					
+//					else {
+//						System.out.println("File found in the current directory");
+//					}
 //						
 						
 						
@@ -279,7 +320,7 @@ public class Main {
 
 	static void displayFiles(File[] dir) {
 		//		File[] filesInDirectory = dir.listFiles();
-		System.out.println("\n\n**********************************************************************************************************************************");
+		System.out.println("\n**********************************************************************************************************************************");
 		System.out.printf("%-4s %-70s %-40s %-50s","Sno.", "File name", "File Type", "File Size");
 		System.out.println("\n\n**********************************************************************************************************************************");
 
@@ -327,6 +368,72 @@ public class Main {
 			System.out.printf("%-4s %-70s %-40s %-50s\n",++count, " "+f.getName(),fileType,size+" "+unit );
 		}//end of for each loop
 	} //End of display files method
+	
+	
+	
+	static void displayFiles(List<File> sResults) {
+//		File[] filesInDirectory = ((File) sResults).listFiles();
+		System.out.println("\n**********************************************************************************************************************************");
+		System.out.printf("%-2s %-60s %-20s %-25s %-150s\n","Sno.", "File name", "File Type", "File Size", "File Path");
+		System.out.println("\n**********************************************************************************************************************************");
+
+		double size=0;
+		int count=0;
+		String unit="bytes";
+
+		String fileType="file";
+		for (File f : sResults) {
+
+			if (f.isDirectory()) { //if else block for fetching directory size
+				size=getDirectorySize(f);
+				fileType="Directory";
+			}
+
+			else {
+				size=(double)f.length();
+				String type = f.getName();
+				String[] filesType=type.split("[.]");
+				fileType= "."+filesType[filesType.length-1];
+			}		//if else block for fetching directory size
+
+			if (size<1024) {
+				size = (int) size/1;	
+				unit="bytes";
+			}
+
+			else if (size>1024 && size<1024*1024) {
+				unit="KB";
+				size=size/1024;
+				size = Math.round(size*10.0)/10.0;	
+			}
+
+			else if (size>1024*1024 && size<1024*1024*1024) {
+				unit="MB";
+				size=size/1024/1024;
+				size = Math.round(size*100.0)/100.0;
+			}
+
+			else if (size>1024*1024*1024) {
+				unit="GB";
+				size=size/1024/1024/1024;
+				size = Math.round(size*100.0)/100.0;
+			}
+			
+//			System.out.printf("%-4s %-70s %-40s %-50s\n",++count, " "+f.getName(),fileType,size+" "+unit );
+
+			
+//			System.out.println(f.getAbsolutePath());
+			System.out.printf("%-2s %-60s %-20s %-25s %-150s\n",++count, " "+f.getName(),fileType,size+" "+unit," "+f.getAbsolutePath() );
+		}//end of for each loop
+	} //End of display files method
+
+	
+	
+	
+	
+	
+	
+	
 
 	static void displayFiles()  {
 
@@ -337,8 +444,10 @@ public class Main {
 
 		//		System.out.println("Absolute path is " +wd.getAbsolutePath());
 		File[] filesInDirectory = currentDirectory.listFiles();
+		
+		System.out.println("\nDisplaying files");
 
-		System.out.println("\n\n**********************************************************************************************************************************");
+		System.out.println("\n**********************************************************************************************************************************");
 		System.out.printf("%-4s %-70s %-40s %-50s","Sno.", "File name", "File Type", "File Size");
 		System.out.println("\n\n**********************************************************************************************************************************");
 
@@ -465,23 +574,56 @@ public class Main {
 	} // input number close
 
 
+	public static int inputNumber(int upperBound, boolean isMenu) { // input number method ok!!
+		Scanner sc = new Scanner(System.in);
+		int choice=0;
+		while (choice<=0||choice>upperBound) {
+			try {
+				System.out.println(" ** NOTE**- Please enter a number between 1 and "+upperBound);
+				choice=sc.nextInt();
+				if (choice==9) {
+					System.out.println("Shutting down application");
+					System.exit(0);
+				}
+
+			} catch (InputMismatchException e) {
+				// TODO: handle exception
+				System.out.println("Invalid choice!! Please try again with a number only");
+				sc.next();
+				choice=0;
+
+				if (menuType==1) {
+					showMainMenu();
+				}
+
+				else if(menuType==2){
+					showBusinessMenu();
+				}
+
+			}	
+		}
+		return choice;
+	} // input number close
+
+	
+	
 
 	static void showBusinessMenu() {
-		System.out.println("\n\t\t\t BUSINESS OPERATIONS MENU");
-		System.out.println("Please select the following options and press enter key for your choice");
-		System.out.println("1. Add a file in the current directory ");
-		System.out.println("2. Delete a file from the current directory");
-		System.out.println("3. Search for a specific file");
-		System.out.println("4. Return to the main menu");
+		System.out.println("\n\t\t\t BUSINESS OPERATIONS MENU\n");
+		System.out.println("*Please select from the following options and press enter key for your choice\n");
+		System.out.println("\t1. Add a file in the current directory ");
+		System.out.println("\t2. Delete a file from the current directory");
+		System.out.println("\t3. Search for a specific file");
+		System.out.println("\t4. Return to the main menu");
 	}
 
 	static void showMainMenu() {
-		System.out.println("\n\t\t\tMAIN MENU");
-		System.out.println("Please select the following options and press enter key for your choice");
-		System.out.println("1. Display the files present in a directory");
-		System.out.println("2. Sort files in curret directory");
-		System.out.println("3. More options");
-		System.out.println("4. Exit the program");
+		System.out.println("\n\t\t\t\tMAIN MENU\n");
+		System.out.println("*Please select from the following options and press enter key for your choice\n");
+		System.out.println("\t1. Display the files present in a directory");
+		System.out.println("\t2. Sort files in a directory (Ascending)");
+		System.out.println("\t3. More options");
+		System.out.println("\t4. Exit the program");
 
 	}
 
@@ -492,7 +634,7 @@ public class Main {
 	@SuppressWarnings("unchecked")
 	static File[] sortFiles(File dir) {
 		File[] filesInDirectory = dir.listFiles();
-		System.out.println("File are being sorted");
+		System.out.println("\n Files sorted successfully");
 
 		Arrays.sort(filesInDirectory, new FileSorter());
 
